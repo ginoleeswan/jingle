@@ -1,21 +1,40 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import AppLoading from "expo-app-loading";
+import { NavigationContainer } from "@react-navigation/native";
+import { HomeNavigation } from "./app/navigation/HomeNavigation";
+
+import {
+  useFonts,
+  AveriaSerifLibre_300Light as AveriaLight,
+  AveriaSerifLibre_400Regular as AveriaRegular,
+  AveriaSerifLibre_700Bold as AveriaBold,
+} from "@expo-google-fonts/averia-serif-libre";
+
+import {
+  Nunito_300Light as NunitoLight,
+  Nunito_400Regular as NunitoRegular,
+  Nunito_700Bold as NunitoBold,
+  Nunito_900Black as NunitoBlack,
+} from "@expo-google-fonts/nunito";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  let [fontsLoaded] = useFonts({
+    AveriaLight,
+    AveriaRegular,
+    AveriaBold,
+    NunitoLight,
+    NunitoRegular,
+    NunitoBold,
+    NunitoBlack,
+  });
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  } else {
+    return (
+      <NavigationContainer>
+        <HomeNavigation />
+      </NavigationContainer>
+    );
+  }
+}
