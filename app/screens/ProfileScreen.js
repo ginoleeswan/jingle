@@ -1,17 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { TouchableOpacity } from "react-native";
 import { Dimensions, StatusBar, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../../firebase";
 import { COLORS } from "../styles/colors";
 
+import { connect, useDispatch, useSelector } from "react-redux";
+import { bindActionCreators } from "redux";
+import { fetchUser } from "../redux/actions/index";
+import { Avatar } from "react-native-elements";
+
+// const mapDispatchProps = (dispatch) =>
+//   bindActionCreators({ fetchUser }, dispatch);
+
 const ProfileScreen = ({ navigation }) => {
+  const currentUser = useSelector((state) => state.userState.currentUser);
+
   const handleSignOut = () => {
+    console.log(auth.currentUser?.email, " Logged out");
     auth
       .signOut()
-      .then(() => {
-        navigation.replace("Login");
-      })
+      // .then(() => {
+      // navigation.replace("Landing");
+      // })
       .catch((err) => alert(err.message));
   };
 
@@ -22,11 +33,45 @@ const ProfileScreen = ({ navigation }) => {
         backgroundColor="transparent"
         barStyle="dark-content"
       />
-      <View style={styles.header}>
-        <Text style={styles.appTitle}>profile</Text>
-      </View>
       <View style={styles.section}>
-        <Text style={styles.p}>Email: {auth.currentUser?.email}</Text>
+        <View style={styles.avatarContainer}>
+          <Avatar
+            size={150}
+            rounded
+            icon={{ name: "user", type: "font-awesome" }}
+            source={
+              currentUser.profilePictureURL
+                ? { uri: currentUser.profilePictureURL }
+                : null
+            }
+            onPress={() => console.log("Works!")}
+            activeOpacity={0.7}
+            containerStyle={{
+              backgroundColor: "gray",
+            }}
+          />
+        </View>
+
+        {/* <View style={styles.header}>
+        <Text style={styles.appTitle}>profile</Text>
+      </View> */}
+
+        <Text style={styles.name}>{currentUser?.name}</Text>
+        <Text style={styles.p}>{currentUser?.email}</Text>
+        <View style={styles.statsContainer}>
+          <View style={styles.stat}>
+            <Text style={styles.statAmount}>21</Text>
+            <Text style={styles.statTitle}>Posts</Text>
+          </View>
+          <View style={styles.stat}>
+            <Text style={styles.statAmount}>987</Text>
+            <Text style={styles.statTitle}>Followers</Text>
+          </View>
+          <View style={styles.stat}>
+            <Text style={styles.statAmount}>63</Text>
+            <Text style={styles.statTitle}>Following</Text>
+          </View>
+        </View>
         <TouchableOpacity onPress={handleSignOut} style={styles.button}>
           <Text style={styles.buttonText}>Sign Out</Text>
         </TouchableOpacity>
@@ -46,6 +91,13 @@ const styles = StyleSheet.create({
     color: "black",
     fontFamily: "NunitoRegular",
   },
+  name: {
+    marginTop: 24,
+    fontSize: 16,
+    textAlign: "left",
+    color: "black",
+    fontFamily: "NunitoBold",
+  },
   header: {
     flexDirection: "row",
     width: "100%",
@@ -61,12 +113,38 @@ const styles = StyleSheet.create({
     fontFamily: "AveriaRegular",
     width: "100%",
   },
+  avatarContainer: {
+    shadowColor: "#131734",
+    shadowRadius: 15,
+    shadowOpacity: 0.4,
+  },
   section: {
+    marginTop: 30,
     flex: 1,
     paddingHorizontal: 15,
-    justifyContent: "center",
+    // justifyContent: "space-evenly",
     alignItems: "center",
     // backgroundColor: "blue",
+  },
+  statsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    margin: 32,
+  },
+  stat: {
+    alignItems: "center",
+    flex: 1,
+  },
+  statAmount: {
+    color: "#4f566d",
+    fontSize: 18,
+    fontWeight: "300",
+  },
+  statTitle: {
+    color: "#c3c5cd",
+    fontSize: 12,
+    fontWeight: "500",
+    marginTop: 4,
   },
   button: {
     backgroundColor: "#0782F9",

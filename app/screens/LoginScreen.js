@@ -8,19 +8,29 @@ import {
   TextInput,
   Image,
   StatusBar,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { auth } from "../../firebase";
+import { auth, UsersRef, firebase } from "../../firebase";
 import { COLORS } from "../styles/colors";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  // const [user, setUser] = useState(null);
+  const [initializing, setInitializing] = useState(true);
 
   const handleSignup = () => {
+    if (!initializing) setInitializing(true);
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((userCredentials) => {
+        firebase.firestore().collection("users").doc(auth.currentUser.uid).set({
+          name,
+          email,
+        });
+        // setUser(userCredentials.user);
         const user = userCredentials.user;
         console.log("Registered with: ", user.email);
       })
@@ -28,9 +38,11 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const handleLogin = () => {
+    if (!initializing) setInitializing(true);
     auth
       .signInWithEmailAndPassword(email, password)
       .then((userCredentials) => {
+        // setUser(userCredentials.user);
         const user = userCredentials.user;
         console.log("Logged in with: ", user.email);
       })
@@ -52,6 +64,7 @@ const LoginScreen = ({ navigation }) => {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (initializing) setInitializing(false);
       if (user) {
         navigation.replace("MainNav");
       }
@@ -60,122 +73,138 @@ const LoginScreen = ({ navigation }) => {
     return unsubscribe;
   }, []);
 
-  return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding">
-      <StatusBar
-        translucent
-        backgroundColor="transparent"
-        barStyle="dark-content"
-      />
-      <View
-        style={{
-          //   backgroundColor: "green",
-
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+  if (initializing)
+    return (
+      <SafeAreaView
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
       >
-        <Image
-          source={require("../assets/jingle-icon-android.png")}
-          style={{ width: 100, height: 100, resizeMode: "contain" }}
+        <ActivityIndicator />
+      </SafeAreaView>
+    );
+  else {
+    return (
+      <KeyboardAvoidingView style={styles.container} behavior="padding">
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
         />
-        <Text style={styles.appTitle}>jingle</Text>
-      </View>
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Password"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          style={styles.input}
-          secureTextEntry
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={handleLogin} style={styles.button}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
+        <View
+          style={{
+            //   backgroundColor: "green",
 
-        <TouchableOpacity
-          onPress={handleSignup}
-          style={[styles.button, styles.buttonOutline]}
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
-          <Text style={styles.buttonOutlineText}>Register</Text>
-        </TouchableOpacity>
-      </View>
+          <Image
+            source={require("../assets/jingle-icon-android.png")}
+            style={{ width: 100, height: 100, resizeMode: "contain" }}
+          />
+          <Text style={styles.appTitle}>jingle</Text>
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Name"
+            value={name}
+            onChangeText={(text) => setName(text)}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Email"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Password"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            style={styles.input}
+            secureTextEntry
+          />
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={handleLogin} style={styles.button}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
 
-      <View style={styles.socialButtonContainer}>
-        <TouchableOpacity
-          onPress={() => {}}
-          style={[styles.button, styles.buttonGoogle]}
-        >
-          <View
-            style={{
-              width: "18%",
-              alignItems: "center",
-            }}
+          <TouchableOpacity
+            onPress={handleSignup}
+            style={[styles.button, styles.buttonOutline]}
           >
-            <Image
-              source={{
-                uri: "https://img.icons8.com/color/96/000000/google-logo.png",
-              }}
-              style={{ width: 25, height: 25 }}
-            />
-          </View>
-          <View style={{ width: "82%" }}>
-            <Text style={styles.buttonTextGoogle}>Sign in with Google</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {}}
-          style={[styles.button, styles.buttonFacebook]}
-        >
-          <View
-            style={{
-              width: "18%",
-              alignItems: "center",
-            }}
+            <Text style={styles.buttonOutlineText}>Register</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* <View style={styles.socialButtonContainer}>
+          <TouchableOpacity
+            onPress={() => {}}
+            style={[styles.button, styles.buttonGoogle]}
           >
-            <Image
-              source={{
-                uri: "https://img.icons8.com/material-sharp/96/ffffff/facebook-new.png",
+            <View
+              style={{
+                width: "18%",
+                alignItems: "center",
               }}
-              style={{ width: 25, height: 25 }}
-            />
-          </View>
-          <View style={{ width: "82%" }}>
-            <Text style={styles.buttonText}>Sign in with Facebook</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {}}
-          style={[styles.button, styles.buttonTwitter]}
-        >
-          <View
-            style={{
-              width: "18%",
-              alignItems: "center",
-            }}
+            >
+              <Image
+                source={{
+                  uri: "https://img.icons8.com/color/96/000000/google-logo.png",
+                }}
+                style={{ width: 25, height: 25 }}
+              />
+            </View>
+            <View style={{ width: "82%" }}>
+              <Text style={styles.buttonTextGoogle}>Sign in with Google</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {}}
+            style={[styles.button, styles.buttonFacebook]}
           >
-            <Image
-              source={{
-                uri: "https://img.icons8.com/ios-glyphs/90/ffffff/twitter--v1.png",
+            <View
+              style={{
+                width: "18%",
+                alignItems: "center",
               }}
-              style={{ width: 25, height: 25 }}
-            />
-          </View>
-          <View style={{ width: "82%" }}>
-            <Text style={styles.buttonText}>Sign in with Twitter</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
-  );
+            >
+              <Image
+                source={{
+                  uri: "https://img.icons8.com/material-sharp/96/ffffff/facebook-new.png",
+                }}
+                style={{ width: 25, height: 25 }}
+              />
+            </View>
+            <View style={{ width: "82%" }}>
+              <Text style={styles.buttonText}>Sign in with Facebook</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {}}
+            style={[styles.button, styles.buttonTwitter]}
+          >
+            <View
+              style={{
+                width: "18%",
+                alignItems: "center",
+              }}
+            >
+              <Image
+                source={{
+                  uri: "https://img.icons8.com/ios-glyphs/90/ffffff/twitter--v1.png",
+                }}
+                style={{ width: 25, height: 25 }}
+              />
+            </View>
+            <View style={{ width: "82%" }}>
+              <Text style={styles.buttonText}>Sign in with Twitter</Text>
+            </View>
+          </TouchableOpacity>
+        </View> */}
+      </KeyboardAvoidingView>
+    );
+  }
 };
 
 export default LoginScreen;

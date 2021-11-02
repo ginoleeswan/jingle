@@ -1,7 +1,7 @@
 import React from "react";
 import AppLoading from "expo-app-loading";
 import { NavigationContainer } from "@react-navigation/native";
-import { HomeNavigation } from "./app/navigation/HomeNavigation";
+import { BaseNavigation } from "./app/navigation/BaseNavigation";
 
 import {
   useFonts,
@@ -16,6 +16,8 @@ import {
   Nunito_700Bold as NunitoBold,
   Nunito_900Black as NunitoBlack,
 } from "@expo-google-fonts/nunito";
+
+// const store = createStore(rootReducer, applyMiddleware(thunk));
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -33,7 +35,7 @@ export default function App() {
   } else {
     return (
       <NavigationContainer>
-        <HomeNavigation />
+        <BaseNavigation />
       </NavigationContainer>
     );
   }

@@ -7,6 +7,7 @@ import * as firebase from "firebase";
 const firebaseConfig = {
   apiKey: "AIzaSyAxw6Q_18QqWXdfVH38Vz8a5JwcRuDUIWU",
   authDomain: "jingle-2d9b3.firebaseapp.com",
+  databaseURL: "https://jingle-2d9b3.firebaseio.com",
   projectId: "jingle-2d9b3",
   storageBucket: "jingle-2d9b3.appspot.com",
   messagingSenderId: "1086327066887",
@@ -21,6 +22,10 @@ if (firebase.apps.length === 0) {
   app = firebase.app();
 }
 
+const db = firebase.firestore(app);
+
+const UsersRef = db.collection("users");
+
 const auth = firebase.auth();
 
-export { auth };
+export { auth, firebase, UsersRef };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -9,9 +9,19 @@ import { COLORS } from "../styles/colors";
 import DiscoverScreen from "../screens/DiscoverScreen";
 import TrendingScreen from "../screens/TrendingScreen";
 
+import { connect, useDispatch, useSelector } from "react-redux";
+import { fetchUser } from "../redux/actions/index";
+
 const Tab = createBottomTabNavigator();
 
 const NavBar = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUser());
+    // console.log(currentUser);
+  }, [dispatch]);
+
   return (
     <Tab.Navigator
       screenOptions={({ route, navigation }) => ({
