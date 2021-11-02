@@ -1,5 +1,5 @@
 <div align="center">
-<img alt='jingle-logo' src='./app/assets/jingle-horizontal-logo.png' width="60%" height="60%"/>
+<img alt='jingle-logo' src='./app/assets/jingle-horizontal-logo.png' width="50%" height="50%"/>
 
 </div>
 
