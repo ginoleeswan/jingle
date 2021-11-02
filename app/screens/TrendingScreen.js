@@ -1,5 +1,12 @@
 import React from "react";
-import { Dimensions, StatusBar, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS } from "../styles/colors";
 

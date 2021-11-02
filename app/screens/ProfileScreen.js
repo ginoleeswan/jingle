@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { TouchableOpacity } from "react-native";
+import { Platform, TouchableOpacity } from "react-native";
 import { Dimensions, StatusBar, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../../firebase";
@@ -34,23 +34,24 @@ const ProfileScreen = ({ navigation }) => {
         barStyle="dark-content"
       />
       <View style={styles.section}>
-        <View style={styles.avatarContainer}>
-          <Avatar
-            size={150}
-            rounded
-            icon={{ name: "user", type: "font-awesome" }}
-            source={
-              currentUser.profilePictureURL
-                ? { uri: currentUser.profilePictureURL }
-                : null
-            }
-            onPress={() => console.log("Works!")}
-            activeOpacity={0.7}
-            containerStyle={{
-              backgroundColor: "gray",
-            }}
-          />
-        </View>
+        <Avatar
+          size={150}
+          rounded
+          icon={{ name: "user", type: "font-awesome" }}
+          source={
+            currentUser.profilePictureURL
+              ? { uri: currentUser.profilePictureURL }
+              : null
+          }
+          onPress={() => console.log("Works!")}
+          activeOpacity={0.7}
+          containerStyle={{
+            backgroundColor: "gray",
+            shadowColor: "#131734",
+            shadowRadius: 15,
+            shadowOpacity: 0.4,
+          }}
+        />
 
         {/* <View style={styles.header}>
         <Text style={styles.appTitle}>profile</Text>
@@ -130,6 +131,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     margin: 32,
+    // backgroundColor: "green",
+    width: "90%",
   },
   stat: {
     alignItems: "center",

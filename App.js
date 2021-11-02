@@ -3,6 +3,8 @@ import AppLoading from "expo-app-loading";
 import { NavigationContainer } from "@react-navigation/native";
 import { BaseNavigation } from "./app/navigation/BaseNavigation";
 
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
 import {
   useFonts,
   AveriaSerifLibre_300Light as AveriaLight,
@@ -34,9 +36,11 @@ export default function App() {
     return <AppLoading />;
   } else {
     return (
-      <NavigationContainer>
-        <BaseNavigation />
-      </NavigationContainer>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <BaseNavigation />
+        </NavigationContainer>
+      </SafeAreaProvider>
     );
   }
 }
