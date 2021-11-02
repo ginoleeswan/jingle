@@ -1,3 +1,8 @@
+<div align="center">
+<img alt='jingle-logo' src='./app/assets/jingle-horizontal-logo.png' width="60%" height="60%"/>
+
+</div>
+
 <h1 align="center">🎵  Music Sharing App 🎵 </h1>
 
 <p align="center"> Made in React Native, constructed with Expo CLI. </p>
