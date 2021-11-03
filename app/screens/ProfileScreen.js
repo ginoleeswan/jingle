@@ -9,6 +9,7 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
 import { fetchUser } from "../redux/actions/index";
 import { Avatar } from "react-native-elements";
+import UploadImage from "../components/UploadImage";
 
 // const mapDispatchProps = (dispatch) =>
 //   bindActionCreators({ fetchUser }, dispatch);
@@ -34,7 +35,8 @@ const ProfileScreen = ({ navigation }) => {
         barStyle="dark-content"
       />
       <View style={styles.section}>
-        <Avatar
+        <UploadImage />
+        {/* <Avatar
           size={150}
           rounded
           icon={{ name: "user", type: "font-awesome" }}
@@ -51,7 +53,7 @@ const ProfileScreen = ({ navigation }) => {
             shadowRadius: 15,
             shadowOpacity: 0.4,
           }}
-        />
+        /> */}
 
         {/* <View style={styles.header}>
         <Text style={styles.appTitle}>profile</Text>
@@ -59,6 +61,7 @@ const ProfileScreen = ({ navigation }) => {
 
         <Text style={styles.name}>{currentUser?.name}</Text>
         <Text style={styles.p}>{currentUser?.email}</Text>
+        {/* <Text style={styles.p}>{currentUser?.photoURL}</Text> */}
         <View style={styles.statsContainer}>
           <View style={styles.stat}>
             <Text style={styles.statAmount}>21</Text>
